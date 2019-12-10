@@ -193,5 +193,32 @@ namespace DepartmentsEmployees.Data
             }
 
         }
+
+        /// <summary>
+        ///  Add a new department to the database
+        ///   NOTE: This method sends data to the database,
+        ///   it does not get anything from the database, so there is nothing to return.
+        /// </summary>
+        public void AddEmployee(Employee employee)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO Employee (FirstName, LastName, DepartmentId) " +
+                        "OUTPUT INSERTED.Id " +
+                        "VALUES (@FirstName, @LastName, @DepartmentId)";
+
+                    cmd.Parameters.Add(new SqlParameter("@FirstName", employee.FirstName));
+                    cmd.Parameters.Add(new SqlParameter("@LastName", employee.LastName));
+                    cmd.Parameters.Add(new SqlParameter("@DepartmentId", employee.DepartmentId));
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    employee.Id = id;
+                }
+            }
+        }
     }
 }

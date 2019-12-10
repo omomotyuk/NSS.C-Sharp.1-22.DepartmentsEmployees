@@ -1,6 +1,7 @@
 ﻿using DepartmentsEmployees.Data;
 using DepartmentsEmployees.Models;
 using System;
+using System.Collections.Generic;
 
 namespace DepartmentsEmployees
 {
@@ -8,25 +9,24 @@ namespace DepartmentsEmployees
     {
         static void Main(string[] args)
         {
-            //TestDepartment();
-            //TestEmployee();
-            TestEmployeeDepartment();
+            TestDepartment();
+            TestEmployee();
         }
 
         static void TestDepartment()
         {
             var departmentRepo = new DepartmentRepository();
-
             var allDepartments = departmentRepo.GetAllDepartments();
 
-            Console.WriteLine("All Departments:\n");
+            Console.WriteLine("\nAll Departments:\n" +
+                                "----------------" );
             foreach (var dept in allDepartments)
             {
                 Console.WriteLine(dept.DepartmentName);
             }
+            Console.Write("\n");
 
             var hardCodedId = 3;
-
             var departmentWithId3 = departmentRepo.GetDepartmentById(hardCodedId);
 
             Console.WriteLine($"Department with id {hardCodedId} is {departmentWithId3.DepartmentName}");
@@ -56,34 +56,45 @@ namespace DepartmentsEmployees
         static void TestEmployee()
         {
             var employeeRepo = new EmployeeRepository();
-
             var allEmployees = employeeRepo.GetAllEmployees();
 
-            Console.WriteLine("\nAll Employees:\n");
-            foreach (var empl in allEmployees)
-            {
-                Console.WriteLine($"{empl.FirstName} {empl.LastName}, {empl.DepartmentId}");
-            }
+            EmployeeList( allEmployees );
 
             var hardCodedId = 3;
-
             var employeeWithId3 = employeeRepo.GetEmployeeById(hardCodedId);
 
             Console.WriteLine($"Employee with id {hardCodedId} is {employeeWithId3.FirstName} {employeeWithId3.LastName}");
-        }
 
-        static void TestEmployeeDepartment()
-        {
-            var employeeRepo = new EmployeeRepository();
+            //
+            // TestEmployeeDepartment()
+            //
+            var allEmployeeDepartment = employeeRepo.GetAllEmployeesWithDepartment();
 
-            var allEmployees = employeeRepo.GetAllEmployeesWithDepartment();
-
-            Console.WriteLine("\nAll Employees with Department:\n");
-            foreach (var empl in allEmployees)
+            Console.WriteLine("\nAll Employees with Department:\n" +
+                                "------------------------------");
+            foreach (var empl in allEmployeeDepartment)
             {
-                Console.WriteLine($"{empl.FirstName} {empl.LastName}, {empl.DepartmentId} {empl.DepartmentName}");
+                Console.WriteLine($"{empl.FirstName} {empl.LastName}, {empl.DepartmentName} ({empl.DepartmentId})");
             }
+            Console.Write("\n");
+
+            /*
+             *  test of AddEmployee()
+             */
+            var newEmployee = new Employee { FirstName = "New", LastName = "Newson", DepartmentId = 3 };
+            employeeRepo.AddEmployee( newEmployee );
+            EmployeeList( employeeRepo.GetAllEmployees() );
         }
 
+        static void EmployeeList( List<Employee> employees )
+        {
+            Console.WriteLine("\nAll Employees:\n" +
+                                "--------------");
+            foreach (var employee in employees)
+            {
+                Console.WriteLine($"{employee.FirstName} {employee.LastName}, {employee.DepartmentId}");
+            }
+            Console.Write("\n");
+        }
     }
 }
