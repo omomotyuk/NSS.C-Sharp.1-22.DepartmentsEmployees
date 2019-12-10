@@ -78,11 +78,46 @@ namespace DepartmentsEmployees
             }
             Console.Write("\n");
 
-            /*
-             *  test of AddEmployee()
-             */
+            //
+            // test of AddEmployee()
+            //
             var newEmployee = new Employee { FirstName = "New", LastName = "Newson", DepartmentId = 3 };
-            employeeRepo.AddEmployee( newEmployee );
+            //employeeRepo.AddEmployee( newEmployee );
+            //EmployeeList( employeeRepo.GetAllEmployees() );
+
+            //
+            // test of UpdateEmployee
+            //
+            EmployeeList( employeeRepo.GetAllEmployees() );
+
+            Console.Write("What record to update (id): ");
+            int id = Int32.Parse( Console.ReadLine() );
+
+            newEmployee = employeeRepo.GetEmployeeById( id );
+
+            Console.Write("Would you like to update first name (enter new): ");
+            string newValue = Console.ReadLine();
+            if( newValue.Length != 0 )
+            {
+                newEmployee.FirstName = newValue;
+            }
+
+            Console.Write("Would you like to update last name (enter new): ");
+            newValue = Console.ReadLine();
+            if (newValue.Length != 0)
+            {
+                newEmployee.LastName = newValue;
+            }
+
+            Console.Write("Would you like to update department id (enter new): ");
+            newValue = Console.ReadLine();
+            if (newValue.Length != 0)
+            {
+                newEmployee.DepartmentId = Int32.Parse( newValue );
+            }
+
+            employeeRepo.UpdateEmployee( id, newEmployee );
+
             EmployeeList( employeeRepo.GetAllEmployees() );
         }
 
@@ -92,7 +127,7 @@ namespace DepartmentsEmployees
                                 "--------------");
             foreach (var employee in employees)
             {
-                Console.WriteLine($"{employee.FirstName} {employee.LastName}, {employee.DepartmentId}");
+                Console.WriteLine($"{employee.Id}. {employee.FirstName} {employee.LastName}, {employee.DepartmentId}");
             }
             Console.Write("\n");
         }
