@@ -19,7 +19,7 @@ namespace DepartmentsEmployees
             var allDepartments = departmentRepo.GetAllDepartments();
 
             Console.WriteLine("\nAll Departments:\n" +
-                                "----------------" );
+                                "----------------");
             foreach (var dept in allDepartments)
             {
                 Console.WriteLine(dept.DepartmentName);
@@ -58,7 +58,7 @@ namespace DepartmentsEmployees
             var employeeRepo = new EmployeeRepository();
             var allEmployees = employeeRepo.GetAllEmployees();
 
-            EmployeeList( allEmployees );
+            EmployeeList(allEmployees);
 
             var hardCodedId = 3;
             var employeeWithId3 = employeeRepo.GetEmployeeById(hardCodedId);
@@ -78,50 +78,17 @@ namespace DepartmentsEmployees
             }
             Console.Write("\n");
 
-            //
             // test of AddEmployee()
-            //
-            var newEmployee = new Employee { FirstName = "New", LastName = "Newson", DepartmentId = 3 };
-            //employeeRepo.AddEmployee( newEmployee );
-            //EmployeeList( employeeRepo.GetAllEmployees() );
+            TestAddEmployee( employeeRepo );
 
-            //
             // test of UpdateEmployee
-            //
-            EmployeeList( employeeRepo.GetAllEmployees() );
+            TestUpdateEmployee( employeeRepo );
 
-            Console.Write("What record to update (id): ");
-            int id = Int32.Parse( Console.ReadLine() );
-
-            newEmployee = employeeRepo.GetEmployeeById( id );
-
-            Console.Write("Would you like to update first name (enter new): ");
-            string newValue = Console.ReadLine();
-            if( newValue.Length != 0 )
-            {
-                newEmployee.FirstName = newValue;
-            }
-
-            Console.Write("Would you like to update last name (enter new): ");
-            newValue = Console.ReadLine();
-            if (newValue.Length != 0)
-            {
-                newEmployee.LastName = newValue;
-            }
-
-            Console.Write("Would you like to update department id (enter new): ");
-            newValue = Console.ReadLine();
-            if (newValue.Length != 0)
-            {
-                newEmployee.DepartmentId = Int32.Parse( newValue );
-            }
-
-            employeeRepo.UpdateEmployee( id, newEmployee );
-
-            EmployeeList( employeeRepo.GetAllEmployees() );
+            // test of DeleteEmployee
+            TestDeleteEmployee( employeeRepo );
         }
 
-        static void EmployeeList( List<Employee> employees )
+        static void EmployeeList(List<Employee> employees)
         {
             Console.WriteLine("\nAll Employees:\n" +
                                 "--------------");
@@ -130,6 +97,86 @@ namespace DepartmentsEmployees
                 Console.WriteLine($"{employee.Id}. {employee.FirstName} {employee.LastName}, {employee.DepartmentId}");
             }
             Console.Write("\n");
+        }
+
+        static Employee ReadEmployeeInfo( Employee employee )
+        {
+            Console.Write("Employee's first name (enter new): ");
+            string newValue = Console.ReadLine();
+            if (newValue.Length != 0)
+            {
+                employee.FirstName = newValue;
+            }
+
+            Console.Write("Employee's last name (enter new): ");
+            newValue = Console.ReadLine();
+            if (newValue.Length != 0)
+            {
+                employee.LastName = newValue;
+            }
+
+            Console.Write("Employee's department id (enter new): ");
+            newValue = Console.ReadLine();
+            if (newValue.Length != 0)
+            {
+                employee.DepartmentId = Int32.Parse(newValue);
+            }
+
+            return employee;
+        }
+
+        static void TestAddEmployee(EmployeeRepository employeeRepo)
+        {
+            Console.WriteLine("Would you like to add new employee record?");
+
+            if( Console.ReadLine().Length != 0 )
+            {
+                EmployeeList( employeeRepo.GetAllEmployees() );
+
+                var employee = new Employee();
+
+                employeeRepo.AddEmployee( ReadEmployeeInfo( employee ) );
+
+                EmployeeList( employeeRepo.GetAllEmployees() );
+            }
+        }
+
+        static void TestUpdateEmployee(EmployeeRepository employeeRepo)
+        {
+            Console.WriteLine("Would you like to update employee record?");
+
+            if (Console.ReadLine().Length != 0)
+            {
+                var employee = new Employee();
+
+                EmployeeList( employeeRepo.GetAllEmployees() );
+
+                Console.Write("What record to update (id): ");
+                int id = Int32.Parse(Console.ReadLine());
+
+                employee = ReadEmployeeInfo( employeeRepo.GetEmployeeById(id) );
+
+                employeeRepo.UpdateEmployee(id, employee);
+
+                EmployeeList( employeeRepo.GetAllEmployees() );
+            }
+        }
+
+        static void TestDeleteEmployee(EmployeeRepository employeeRepo)
+        {
+            Console.WriteLine("Would you like to delete employee record?");
+
+            if (Console.ReadLine().Length != 0)
+            {
+                EmployeeList(employeeRepo.GetAllEmployees());
+
+                Console.Write("What record to delete (id): ");
+                int id = Int32.Parse(Console.ReadLine());
+
+                employeeRepo.DeleteEmployee(id);
+
+                EmployeeList(employeeRepo.GetAllEmployees());
+            }
         }
     }
 }

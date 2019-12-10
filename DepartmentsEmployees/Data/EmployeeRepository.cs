@@ -246,5 +246,22 @@ namespace DepartmentsEmployees.Data
                 }
             }
         }
+
+        /// <summary>
+        ///  Delete the department with the given id
+        /// </summary>
+        public void DeleteEmployee(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Employee WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
